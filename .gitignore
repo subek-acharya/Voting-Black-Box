@@ -7,4 +7,3 @@ __pycache__/
 *.th
 *.joblib
 adv_samples/
-*.txt
