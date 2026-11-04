@@ -1,108 +1,83 @@
-# Voting-Black-Box
+# Black-Box Adversarial Example Attacks on Machine Learning based Election Systems
 
-A unified research codebase for **black-box adversarial attacks** against a
-voting/ensemble image classification system for ballot bubble images. This repository
-consolidates several previously separate black-box adversarial attack projects into a single
-package that targets an ensemble ("voting") of models: ResNet, VGG, CaiT, a multi-output SVM,
-spiking ResNet/VGG voters, and a UNet used for preprocessing variants.
+This repository provides **black-box adversarial attack** code — both query-based
+(decision/score only) and transfer-based — against machine-learning voting / ballot-bubble
+image classifiers. All models and attacks are implemented in PyTorch. The classifiers operate
+on grayscale ballot-bubble images (40×50, 2 classes: filled vs. not filled) and the attacks
+assume black-box access: queries to the model outputs, no gradients.
 
-The attacks operate in the black-box setting (query access to model outputs, no gradients) and
-span several attack families drawn from the original source repositories.
+Attacks are run through the experiment scripts under `VotingBlackBox/experiments/`
+(for example `python -m VotingBlackBox.experiments.run_square`), not by uncommenting lines in a
+single file. Each script builds the target models with `ModelFactory`, selects a class-balanced
+set of correctly classified clean samples, runs the attack, and reports robust accuracy.
 
-## Installation
+The attack families provided are:
 
-```bash
-pip install -r requirements.txt
-```
+- **ADBA** — active-set decision-boundary attack (`VotingBlackBox/attacks/adba/`).
+- **RayS** — hard-label decision-based ray search (`VotingBlackBox/attacks/rays/`).
+- **Square** — score-based random-search attack, L∞ and L2 variants (`VotingBlackBox/attacks/square/`).
+- **SurFree** — DCT-based decision attack (`VotingBlackBox/attacks/surfree/`).
+- **SAMOO / MOAA** — multi-objective evolutionary attack (`VotingBlackBox/attacks/samoo/`).
+- **Transfer** — adaptive black-box transfer attack that trains a surrogate by querying the
+  oracle and then applies white-box sub-attacks (APGD-L∞, FGSM, APGD/AutoAttack-L1, APGD-L2, and
+  L0-PGD / L0-L∞-PGD / L0-Sigma-PGD). Transfer is **library code** under
+  `VotingBlackBox/attacks/transfer/`; it has no `run_*` experiment script. The other five
+  families each have a runnable `run_*` script and a `run_*_unet` variant.
 
-Notes:
-- Install a build of `torch` / `torchvision` that matches your CUDA (or CPU) setup.
-- `mambavision` is only required if you instantiate the MambaVision model variant; it is
-  imported lazily, so the rest of the package works without it.
+# Step by Step Guide
 
-## Repository structure
+<ol>
+  <li>Install the packages listed in the Software Installation section below: <code>pip install -r requirements.txt</code>.</li>
+  <li>Place the model checkpoints under <code>checkpoint/</code> (the directory is git-ignored and not shipped with the repo).</li>
+  <li>Place the datasets under <code>data/</code> (also git-ignored and not shipped).</li>
+  <li>Run a chosen experiment script from <code>VotingBlackBox/experiments/</code>, for example <code>python -m VotingBlackBox.experiments.run_square</code>.</li>
+</ol>
 
-```
-Voting-Black-Box/
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
-├── VotingBlackBox/
-│   ├── ModelFactory.py          # builds / loads the voting ensemble models
-│   ├── constants.py             # experiment constants and checkpoint paths
-│   ├── utils.py                 # shared data / model helpers
-│   │
-│   ├── model_architecture/      # model definitions
-│   │   ├── ResNet.py
-│   │   ├── VGG.py
-│   │   ├── cait.py
-│   │   ├── MultiOutputSVM.py
-│   │   ├── UNet.py
-│   │   ├── spiking_resnet_voter.py
-│   │   └── spiking_vgg_voter.py
-│   │
-│   ├── attacks/                 # black-box attack implementations
-│   │   ├── adba/                # ADBA
-│   │   ├── rays/                # RayS
-│   │   ├── square/              # Square attack (Linf + L2)
-│   │   ├── surfree/             # SurFree
-│   │   ├── samoo/               # SAMOO / MOAA (multi-objective)
-│   │   └── transfer/            # adaptive black-box transfer attack
-│   │       └── sub_attacks/
-│   │           ├── linf_attack/ # APGD-Linf, FGSM
-│   │           ├── l1_attack/   # AutoAttack APGD (L1)
-│   │           ├── l2_attack/   # APGD (L2) + data management
-│   │           └── l0_attack/   # L0 PGD family
-│   │
-│   └── experiments/             # runnable experiment scripts (run_*.py)
-│
-├── checkpoint/                  # model weights (git-ignored)
-└── data/                        # datasets (git-ignored)
-```
+# Software Installation
 
-## Models and voting ensemble
+We use the following software packages:
 
-`ModelFactory.py` builds the individual models that make up the voting ensemble:
+<ul>
+  <li>python (3.10)</li>
+  <li>torch</li>
+  <li>torchvision</li>
+  <li>numpy</li>
+  <li>scipy</li>
+  <li>einops</li>
+  <li>spikingjelly</li>
+  <li>mambavision</li>
+</ul>
 
-- **ResNet20** (`model_architecture/ResNet.py`)
-- **VGG16** (`model_architecture/VGG.py`)
-- **CaiT** (`model_architecture/cait.py`)
-- **Multi-output SVM** (`model_architecture/MultiOutputSVM.py`)
-- **Spiking ResNet-20 voter** (`model_architecture/spiking_resnet_voter.py`)
-- **Spiking VGG-16 voter** (`model_architecture/spiking_vgg_voter.py`)
+Versions are indicative — see <code>requirements.txt</code> for the exact package list. Install a
+build of <code>torch</code> / <code>torchvision</code> that matches your CUDA (or CPU) setup;
+<code>mambavision</code> is only needed if you instantiate the optional MambaVision variant and is
+imported lazily. Tested on a CUDA-enabled GPU environment.
 
-A **UNet** (`model_architecture/UNet.py`) is used as a preprocessing front-end for the
-`_unet` experiment variants.
+# Models
 
-## Attack families
+`ModelFactory` (in `VotingBlackBox/ModelFactory.py`) builds the following classifiers from the
+definitions in `VotingBlackBox/model_architecture/`:
 
-- **ADBA** — `attacks/adba/`
-- **RayS** — `attacks/rays/`
-- **Square** (Linf and L2) — `attacks/square/`
-- **SurFree** — `attacks/surfree/`
-- **SAMOO / MOAA** (multi-objective) — `attacks/samoo/`
-- **Transfer / adaptive black-box** — `attacks/transfer/`, with per-norm sub-attacks under
-  `attacks/transfer/sub_attacks/`:
-  - `linf_attack/` — APGD-Linf, FGSM
-  - `l1_attack/` — AutoAttack APGD (L1)
-  - `l2_attack/` — APGD (L2) plus data management utilities
-  - `l0_attack/` — L0 PGD family
+<ul>
+  <li>ResNet20</li>
+  <li>VGG16</li>
+  <li>CaiT (class-attention image transformer)</li>
+  <li>A multi-output SVM classifier</li>
+  <li>A spiking ResNet20 voter</li>
+  <li>A spiking VGG16 voter</li>
+  <li>A UNet denoiser, used as the preprocessing front-end for the <code>_unet</code> attack variants</li>
+</ul>
 
-## Experiments
+Model checkpoints are expected under `checkpoint/`, which is **git-ignored and not shipped** with
+this repository. Supply the weights locally; they can be obtained from the dataset/model release.
 
-Experiment entry points live in `VotingBlackBox/experiments/` as `run_*.py` scripts:
+# Dataset
 
-- `run_adba.py`, `run_adba_unet.py`
-- `run_rays.py`, `run_rays_unet.py`
-- `run_square.py`, `run_square_unet.py`
-- `run_surfree.py`, `run_surfree_unet.py`
-- `run_samoo.py`, `run_samoo_unet.py`
+The attacks target the Combined and OnlyBubbles grayscale voting datasets. Non-UNet experiments
+run on the OnlyBubbles validation set; the `_unet` variants run on the scanned-bubble datasets.
+Datasets are expected under `data/`, which is **git-ignored and not shipped** with the repository.
+The voting datasets are available at <https://zenodo.org/records/18344123>.
 
-The `_unet` variants run the corresponding attack against the UNet-preprocessing pipeline.
+# Contact
 
-## Checkpoints and data
-
-Model checkpoints live under `checkpoint/` and datasets live under `data/`. Both directories
-are **git-ignored**, so the model weights and datasets are not distributed through this
-repository — supply them locally before running any experiment.
+For questions or concerns please contact the author at: subekacharya@uri.edu
