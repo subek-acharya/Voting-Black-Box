@@ -1,5 +1,5 @@
 import torch
-import utils
+from VotingBlackBox import utils
 
 # Import all attacks
 from .sub_attacks.linf_attack.APGD_Linf import DLR_AutoAttackPytorchMatGPUWrapper as APGD_Linf_Attack

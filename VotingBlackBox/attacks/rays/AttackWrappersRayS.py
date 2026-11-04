@@ -3,7 +3,7 @@
 #This attack has been modified to work the the ModelPlus and ShuffleDefense class
 import numpy as np
 import torch
-import utils
+from VotingBlackBox import utils
 import time 
 import torch.nn.functional as F
 

@@ -1,10 +1,10 @@
 import os
 import torch
 from torch.utils.data import DataLoader, TensorDataset
-from constants import EXPERIMENTS_ALL
-import square_attack
-import utils
-from ModelFactory import ModelFactory
+from VotingBlackBox.constants import EXPERIMENTS_ALL
+from VotingBlackBox.attacks import square as square_attack
+from VotingBlackBox import utils
+from VotingBlackBox.ModelFactory import ModelFactory
 
 
 class SquareAttackLinfExperiment:

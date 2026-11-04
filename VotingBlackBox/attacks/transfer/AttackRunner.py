@@ -3,8 +3,8 @@
 
 import torch
 import os
-import utils
-import AttackFactory
+from VotingBlackBox import utils
+from . import AttackFactory
 
 # Import configurations from config.py
 from .config import (

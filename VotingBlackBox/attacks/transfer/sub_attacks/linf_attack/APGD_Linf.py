@@ -1,6 +1,6 @@
 #This is the original APGD attack that does not have any gradient masking fixes 
 import torch
-import utils as DMP
+from VotingBlackBox import utils as DMP
 import numpy as np
 
 #This is the operation for DLR Loss function

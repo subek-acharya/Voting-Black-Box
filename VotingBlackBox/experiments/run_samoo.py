@@ -8,10 +8,10 @@ import os
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from constants import EXPERIMENTS_ALL, UNET_CHECKPOINT
-from AttackWrapperSMOO import SMOO_AttackWrapper
-from ModelFactory import ModelFactory
-import utils
+from VotingBlackBox.constants import EXPERIMENTS_ALL, UNET_CHECKPOINT
+from VotingBlackBox.attacks.samoo.AttackWrapperSMOO import SMOO_AttackWrapper
+from VotingBlackBox.ModelFactory import ModelFactory
+from VotingBlackBox import utils
 
 
 class SMOOAttackExperiment:

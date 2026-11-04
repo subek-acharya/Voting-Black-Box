@@ -1,7 +1,7 @@
 #Attack wrappers class for FGSM and MIM (no extra library implementation) to be used in conjunction with 
 #the adaptive black-box attack 
 import torch 
-import utils as DMP
+from VotingBlackBox import utils as DMP
 import torchvision
 
 #Native (no attack library) implementation of the FGSM attack in Pytorch 

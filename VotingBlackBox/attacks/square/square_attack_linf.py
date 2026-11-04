@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from . import square_attack_utils
-import utils
+from VotingBlackBox import utils
 import time
 
 def SquareAttackLinf_Wrapper(model, device, dataLoader, eps=0.05, n_iters=1000, p_init=0.05, n_classes=2, targeted=False, loss_type="cross_entropy"):
