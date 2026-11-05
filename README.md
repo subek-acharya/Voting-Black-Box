@@ -18,12 +18,6 @@ We use the following software packages:
   <li>mambavision</li>
 </ul>
 
-Versions are indicative; see <code>requirements.txt</code> for the package list. Install a
-<code>torch</code> / <code>torchvision</code> build matching your CUDA or CPU setup.
-<code>spikingjelly</code> is required for the spiking voters; <code>mambavision</code> is only
-needed for the optional MambaVision hook and is imported lazily. Tested on a CUDA-enabled GPU
-environment.
-
 # Models
 
 We provide the following architectures (built by `ModelFactory` from `model_architecture/`):
