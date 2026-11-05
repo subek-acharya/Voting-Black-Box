@@ -1,19 +1,7 @@
 # Black-Box Adversarial Example Attacks on Machine Learning based Election Systems
 
-We provide black-box adversarial attack code — query-based (decision and score) and
-transfer-based — against machine-learning voting and ballot-bubble image classifiers. All models
-and attacks are implemented in PyTorch. Classifiers operate on grayscale 40×50 bubble images with
-two classes (filled vs. not filled). Attacks assume black-box access to model outputs; no
-gradients. Each attack is run as an experiment module under `VotingBlackBox/experiments/`.
-
-# Step by Step Guide
-
-<ol>
-  <li>Install the packages listed in the Software Installation section below: <code>pip install -r requirements.txt</code>.</li>
-  <li>Place the model checkpoints under <code>checkpoint/</code> (git-ignored, not shipped).</li>
-  <li>Place the datasets under <code>data/</code> (git-ignored, not shipped).</li>
-  <li>Run an experiment module from the repository root, for example <code>python -m VotingBlackBox.experiments.run_square</code>.</li>
-</ol>
+We provide black-box adversarial attack framework to run 11 multi-norm adversarial attacks
+against eight image classifiers.
 
 # Software Installation
 
