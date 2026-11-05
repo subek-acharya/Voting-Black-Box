@@ -42,7 +42,7 @@ We provide the following architectures:
 | Square | Score-based |
 | SurFree | Decision-based |
 | SAMOO / MOAA | Decision-based |
-| Transfer (APGD-Linf, FGSM, L1 APGD / AutoAttack, L2 APGD, L0 PGD / Linf-PGD / Sigma-PGD) | Transfer-based |
+| Transfer | Transfer-based (APGD-L<sub>∞</sub>, FGSM, APGD-L<sub>1</sub>, APGD-L<sub>2</sub>, PGD L<sub>0</sub>, PGD L<sub>0</sub>+L<sub>∞</sub>, PGD L<sub>0</sub>+σ) |
 
 # Experiments
 
