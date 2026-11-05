@@ -20,40 +20,31 @@ We use the following software packages:
 
 # Models
 
-We provide the following architectures (built by `ModelFactory` from `model_architecture/`):
+We provide the following architectures:
 
 <ul>
   <li>ResNet20</li>
   <li>VGG16</li>
-  <li>CaiT (class-attention image transformer)</li>
-  <li>Multi-output SVM classifier</li>
-  <li>Spiking ResNet20 voter</li>
-  <li>Spiking VGG16 voter</li>
-  <li>UNet denoiser (preprocessing front-end for the <code>_unet</code> attack variants)</li>
+  <li>CaiT</li>
+  <li>Multi-output SVM</li>
+  <li>Spiking ResNet20</li>
+  <li>Spiking VGG16</li>
+  <li>ProtoPNet-ResNet20</li>
+  <li>ProtoPNet-VGG16</li>
 </ul>
-
-Checkpoints live under `checkpoint/`, which is git-ignored and supplied locally.
 
 # Attacks
 
-| Family | Type | Notes |
-| --- | --- | --- |
-| ADBA | Decision-based | Active-set decision-boundary attack |
-| RayS | Decision-based | Hard-label ray search |
-| Square | Score-based | Random search, Linf and L2 variants |
-| SurFree | Decision-based | DCT-based decision attack |
-| SAMOO / MOAA | Decision-based | Multi-objective evolutionary attack |
-| Transfer | Transfer-based | Adaptive black-box; trains a surrogate by querying the oracle |
-
-Transfer is library code under `attacks/transfer/` with no `run_*` script. Its surrogate
-sub-attacks are APGD-Linf, FGSM, L1 APGD / AutoAttack, L2 APGD, and L0 PGD / Linf-PGD / Sigma-PGD.
+| Family | Type |
+| --- | --- |
+| ADBA | Decision-based |
+| RayS | Decision-based |
+| Square | Score-based |
+| SurFree | Decision-based |
+| SAMOO / MOAA | Decision-based |
+| Transfer | Transfer-based (APGD-Linf, FGSM, L1 APGD / AutoAttack, L2 APGD, L0 PGD / Linf-PGD / Sigma-PGD) |
 
 # Experiments
-
-The `run_*.py` scripts in `VotingBlackBox/experiments/` are the entry points, invoked as modules
-(`python -m VotingBlackBox.experiments.run_square`). Each builds targets with `ModelFactory`,
-selects class-balanced correctly classified clean samples, runs the attack, and reports robust
-accuracy.
 
 <ul>
   <li>Non-UNet (attack the classifier directly on the OnlyBubbles validation set): <code>run_adba</code>, <code>run_rays</code>, <code>run_square</code>, <code>run_surfree</code>, <code>run_samoo</code>.</li>
