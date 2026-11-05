@@ -35,14 +35,14 @@ We provide the following architectures:
 
 # Attacks
 
-| Family | Type |
+| Attacks | Type |
 | --- | --- |
 | ADBA | Decision-based |
 | RayS | Decision-based |
 | Square | Score-based |
 | SurFree | Decision-based |
 | SAMOO / MOAA | Decision-based |
-| Transfer | Transfer-based (APGD-Linf, FGSM, L1 APGD / AutoAttack, L2 APGD, L0 PGD / Linf-PGD / Sigma-PGD) |
+| Transfer (APGD-Linf, FGSM, L1 APGD / AutoAttack, L2 APGD, L0 PGD / Linf-PGD / Sigma-PGD) | Transfer-based |
 
 # Experiments
 
