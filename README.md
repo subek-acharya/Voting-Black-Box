@@ -41,7 +41,7 @@ We provide the following architectures:
 | RayS | Decision-based |
 | Square | Score-based |
 | SurFree | Decision-based |
-| SAMOO / MOAA | Decision-based |
+| SAMOO | Score-based |
 | Transfer | Transfer-based (APGD-L<sub>∞</sub>, FGSM, APGD-L<sub>1</sub>, APGD-L<sub>2</sub>, PGD L<sub>0</sub>, PGD L<sub>0</sub>+L<sub>∞</sub>, PGD L<sub>0</sub>+σ) |
 
 # Experiments
